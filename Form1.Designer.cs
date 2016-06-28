@@ -33,20 +33,22 @@
             this.dOF = new System.Windows.Forms.OpenFileDialog();
             this.lCnt = new System.Windows.Forms.Label();
             this.dgVars = new System.Windows.Forms.DataGridView();
-            this.txValCorrect = new System.Windows.Forms.TextBox();
-            this.txCommCorrect = new System.Windows.Forms.TextBox();
-            this.txFlName = new System.Windows.Forms.TextBox();
-            this.bSaveChg = new System.Windows.Forms.Button();
             this.col1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.col2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.col3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.col4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.txValCorrect = new System.Windows.Forms.TextBox();
+            this.txCommCorrect = new System.Windows.Forms.TextBox();
+            this.txFlName = new System.Windows.Forms.TextBox();
+            this.bSaveChg = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.bExport = new System.Windows.Forms.Button();
             this.bLoad = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.txFlNameComm = new System.Windows.Forms.TextBox();
+            this.chkNewImport = new System.Windows.Forms.CheckBox();
+            this.dSF = new System.Windows.Forms.SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.dgVars)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -72,7 +74,7 @@
             // lCnt
             // 
             this.lCnt.AutoSize = true;
-            this.lCnt.Location = new System.Drawing.Point(12, 64);
+            this.lCnt.Location = new System.Drawing.Point(108, 74);
             this.lCnt.Name = "lCnt";
             this.lCnt.Size = new System.Drawing.Size(0, 13);
             this.lCnt.TabIndex = 1;
@@ -95,49 +97,8 @@
             this.dgVars.ShowCellToolTips = false;
             this.dgVars.Size = new System.Drawing.Size(1047, 349);
             this.dgVars.TabIndex = 3;
-            this.dgVars.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgVars_CellContentClick);
             this.dgVars.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgVars_RowEnter);
             this.dgVars.RowLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgVars_RowLeave);
-            this.dgVars.DoubleClick += new System.EventHandler(this.dgVars_DoubleClick);
-            // 
-            // txValCorrect
-            // 
-            this.txValCorrect.Location = new System.Drawing.Point(15, 96);
-            this.txValCorrect.Multiline = true;
-            this.txValCorrect.Name = "txValCorrect";
-            this.txValCorrect.ReadOnly = true;
-            this.txValCorrect.Size = new System.Drawing.Size(413, 100);
-            this.txValCorrect.TabIndex = 4;
-            // 
-            // txCommCorrect
-            // 
-            this.txCommCorrect.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txCommCorrect.Location = new System.Drawing.Point(434, 96);
-            this.txCommCorrect.Multiline = true;
-            this.txCommCorrect.Name = "txCommCorrect";
-            this.txCommCorrect.Size = new System.Drawing.Size(628, 100);
-            this.txCommCorrect.TabIndex = 4;
-            this.txCommCorrect.Leave += new System.EventHandler(this.txCommCorrect_Leave);
-            // 
-            // txFlName
-            // 
-            this.txFlName.Location = new System.Drawing.Point(111, 15);
-            this.txFlName.Name = "txFlName";
-            this.txFlName.Size = new System.Drawing.Size(508, 20);
-            this.txFlName.TabIndex = 5;
-            this.txFlName.Text = "d:\\work\\PNSK-CER\\FleetCompCode.qvw";
-            // 
-            // bSaveChg
-            // 
-            this.bSaveChg.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.bSaveChg.Location = new System.Drawing.Point(12, 44);
-            this.bSaveChg.Name = "bSaveChg";
-            this.bSaveChg.Size = new System.Drawing.Size(93, 23);
-            this.bSaveChg.TabIndex = 6;
-            this.bSaveChg.Text = "Save changes";
-            this.bSaveChg.UseVisualStyleBackColor = true;
-            this.bSaveChg.Click += new System.EventHandler(this.bSaveChg_Click);
             // 
             // col1
             // 
@@ -166,10 +127,49 @@
             this.col4.Name = "col4";
             this.col4.Visible = false;
             // 
+            // txValCorrect
+            // 
+            this.txValCorrect.Location = new System.Drawing.Point(15, 96);
+            this.txValCorrect.Multiline = true;
+            this.txValCorrect.Name = "txValCorrect";
+            this.txValCorrect.ReadOnly = true;
+            this.txValCorrect.Size = new System.Drawing.Size(413, 100);
+            this.txValCorrect.TabIndex = 4;
+            // 
+            // txCommCorrect
+            // 
+            this.txCommCorrect.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txCommCorrect.Location = new System.Drawing.Point(434, 96);
+            this.txCommCorrect.Multiline = true;
+            this.txCommCorrect.Name = "txCommCorrect";
+            this.txCommCorrect.Size = new System.Drawing.Size(628, 100);
+            this.txCommCorrect.TabIndex = 4;
+            this.txCommCorrect.Leave += new System.EventHandler(this.txCommCorrect_Leave);
+            // 
+            // txFlName
+            // 
+            this.txFlName.Location = new System.Drawing.Point(111, 15);
+            this.txFlName.Name = "txFlName";
+            this.txFlName.Size = new System.Drawing.Size(508, 20);
+            this.txFlName.TabIndex = 5;
+            this.txFlName.Text = "d:\\GITHUB\\penske\\FleetCompCode\\FleetCompCode.qvw";
+            // 
+            // bSaveChg
+            // 
+            this.bSaveChg.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.bSaveChg.Location = new System.Drawing.Point(12, 42);
+            this.bSaveChg.Name = "bSaveChg";
+            this.bSaveChg.Size = new System.Drawing.Size(93, 23);
+            this.bSaveChg.TabIndex = 6;
+            this.bSaveChg.Text = "Save changes";
+            this.bSaveChg.UseVisualStyleBackColor = true;
+            this.bSaveChg.Click += new System.EventHandler(this.bSaveChg_Click);
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(23, 80);
+            this.label1.Location = new System.Drawing.Point(23, 85);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(57, 13);
             this.label1.TabIndex = 7;
@@ -228,13 +228,24 @@
             this.txFlNameComm.Name = "txFlNameComm";
             this.txFlNameComm.Size = new System.Drawing.Size(411, 20);
             this.txFlNameComm.TabIndex = 5;
-            this.txFlNameComm.Text = "d:\\work\\PNSK-CER\\VariablesMain.xls";
+            this.txFlNameComm.Text = "d:\\GITHUB\\penske\\FleetCompCode\\VariablesMain.xls";
+            // 
+            // chkNewImport
+            // 
+            this.chkNewImport.AutoSize = true;
+            this.chkNewImport.Location = new System.Drawing.Point(111, 48);
+            this.chkNewImport.Name = "chkNewImport";
+            this.chkNewImport.Size = new System.Drawing.Size(101, 17);
+            this.chkNewImport.TabIndex = 9;
+            this.chkNewImport.Text = "Import new vars";
+            this.chkNewImport.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1067, 563);
+            this.Controls.Add(this.chkNewImport);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -277,6 +288,8 @@
         private System.Windows.Forms.Button bLoad;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox txFlNameComm;
+        private System.Windows.Forms.CheckBox chkNewImport;
+        private System.Windows.Forms.SaveFileDialog dSF;
     }
 }
 
