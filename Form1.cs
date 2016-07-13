@@ -87,19 +87,35 @@ namespace WindowsFormsApplication4
             string varname;
             string VarVal;
             string comment;
-            for (int i = 0; i < QV.v.count; i++)
+            pbSave.Value = 0;
+            pbSave.Maximum = QV.v.count;
+            lCurrent.Text = "Loading...";
+
+            dgVars.SuspendLayout();
+            try
             {
-                varname = QV.v.Item(i).Name;
-                if (!QV.varS.Contains(varname))
+                for (int i = 0; i < QV.v.count; i++)
                 {
-                    VarVal = QV.doc.Variables(varname).GetRawContent();
-                    comment = QV.doc.Variables(varname).GetComment();
-                    row0[0] = varname;
-                    row0[1] = VarVal;
-                    row0[2] = comment;
-                    dgVars.Rows.Add(row0);
+                    varname = QV.v.Item(i).Name;
+                    if (!QV.varS.Contains(varname))
+                    {
+                        VarVal = QV.doc.Variables(varname).GetRawContent();
+                        comment = QV.doc.Variables(varname).GetComment();
+                        row0[0] = varname;
+                        row0[1] = VarVal;
+                        row0[2] = comment;
+
+                        dgVars.Rows.Add(row0);
+                    }
+                    pbSave.PerformStep();
                 }
             }
+            finally
+            {
+                dgVars.ResumeLayout(true);
+                lCurrent.Text = "";
+            }
+
         }
 
         private void dgVars_RowEnter(object sender, DataGridViewCellEventArgs e)
@@ -128,11 +144,20 @@ namespace WindowsFormsApplication4
             {
                 try
                 {
-                    bSaveChg.Text = "Save changes";
+                    if (QV == null)
+                    {
+                        return;
+                    }
+                    //bSaveChg.Text = "Save changes";
                     bSaveChg.Enabled = false;
+                    pbSave.Maximum = dgVars.Rows.Count;
+                    pbSave.Value = 0;
+                    lCurrent.Text = "Saving...";
                     for (i = 0; i < dgVars.Rows.Count - 1; i++)
                     {
                         setVariable(QV, (string)dgVars[0, i].Value, (string)dgVars[2, i].Value, (string)dgVars[1, i].Value);
+                        pbSave.PerformStep();
+                        Application.DoEvents();
                         /*
                         try
                         {
@@ -148,64 +173,73 @@ namespace WindowsFormsApplication4
                          */
                     }
                     QV.doc.Save();
+                    MessageBox.Show("Complete!", "Transfering process",
+                                         MessageBoxButtons.OK,
+                                         MessageBoxIcon.Exclamation);
+                    lCurrent.Text = "";
                 }
                 catch
                 {
                     bSaveChg.Enabled = true;
                     //bSaveChg.Text = "Saving error";
                     MessageBox.Show("Fail!", "Saving process",
-                                     MessageBoxButtons.YesNo,
+                                     MessageBoxButtons.OK,
                                      MessageBoxIcon.Error);
                 }
-                MessageBox.Show("Complete!", "Saving process",
-                                     MessageBoxButtons.YesNo,
-                                     MessageBoxIcon.Exclamation);
             }
             else
             {
                 try
                 {
                     bSaveChg.Enabled = false;
+                    pbSave.Value = 0;
                     try
                     { QV.doc.CloseDoc(); }
                     catch { }
 
                     QV = new QlikInstance(txFlName.Text);
                     QlikInstance QVdest = new QlikInstance(txFlNameDest.Text);
-
                     if (chkErase.Checked)
                     {
+                        pbSave.Maximum = QVdest.v.count;
+                        lCurrent.Text = "Deleting...";
                         for (int ii = 0; ii < QVdest.v.count; ii++)
                         {
                             QVdest.doc.RemoveVariable(QVdest.v.Item(ii).Name);
+                            pbSave.PerformStep();
+                            Application.DoEvents();
                         }
                     }
 
+                    pbSave.Value = 0;
+                    pbSave.Maximum = QV.v.count;
+                    lCurrent.Text = "Transfering...";
                     string varname;
                     for (int ii = 0; ii < QV.v.count; ii++)
                     {
                         varname = QV.v.Item(ii).Name;
                         QVdest.doc.RemoveVariable(varname);
                         QVdest.doc.CreateVariable(varname);
-
                         setVariable(QVdest, varname, QV.doc.Variables(varname).GetComment(), QV.doc.Variables(varname).GetRawContent());
-
+                        pbSave.PerformStep();
+                        Application.DoEvents();
                     }
                     QVdest.doc.Save();
                     QV.doc.CloseDoc();
                     QVdest.doc.CloseDoc();
                     bSaveChg.Enabled = true;
+                    MessageBox.Show("Complete!", "Transfering process",
+                                         MessageBoxButtons.OK,
+                                         MessageBoxIcon.Exclamation);
+                    lCurrent.Text = "";
                 }
                 catch
                 {
                     bSaveChg.Enabled = true;
                     MessageBox.Show("Fail!", "Transfering process",
-                                     MessageBoxButtons.YesNo,
+                                     MessageBoxButtons.OK,
                                      MessageBoxIcon.Error);
                 }
-                MessageBox.Show("Complete!", "Transfering process",
-                                     MessageBoxButtons.YesNo,
-                                     MessageBoxIcon.Exclamation);
 
             }
         }
@@ -398,6 +432,8 @@ namespace WindowsFormsApplication4
 
         private void chkCopy_CheckedChanged(object sender, EventArgs e)
         {
+            bSaveChg.Text = chkCopy.Checked? "Transfer" : "Save changes";
+
             chkErase.Enabled = chkCopy.Checked;
             txFlNameDest.Enabled = chkCopy.Checked;
             

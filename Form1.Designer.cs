@@ -53,6 +53,8 @@
             this.txFlNameDest = new System.Windows.Forms.TextBox();
             this.chkCopy = new System.Windows.Forms.CheckBox();
             this.chkErase = new System.Windows.Forms.CheckBox();
+            this.pbSave = new System.Windows.Forms.ProgressBar();
+            this.lCurrent = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgVars)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -99,7 +101,7 @@
             this.dgVars.Name = "dgVars";
             this.dgVars.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dgVars.ShowCellToolTips = false;
-            this.dgVars.Size = new System.Drawing.Size(1047, 365);
+            this.dgVars.Size = new System.Drawing.Size(1047, 347);
             this.dgVars.TabIndex = 3;
             this.dgVars.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgVars_RowEnter);
             this.dgVars.RowLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgVars_RowLeave);
@@ -149,6 +151,7 @@
             this.txCommCorrect.Name = "txCommCorrect";
             this.txCommCorrect.Size = new System.Drawing.Size(628, 100);
             this.txCommCorrect.TabIndex = 4;
+            this.txCommCorrect.Text = ".";
             this.txCommCorrect.Leave += new System.EventHandler(this.txCommCorrect_Leave);
             // 
             // txFlName
@@ -292,11 +295,31 @@
             this.chkErase.Text = "clear before copying";
             this.chkErase.UseVisualStyleBackColor = true;
             // 
+            // pbSave
+            // 
+            this.pbSave.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pbSave.Location = new System.Drawing.Point(0, 595);
+            this.pbSave.Name = "pbSave";
+            this.pbSave.Size = new System.Drawing.Size(1067, 23);
+            this.pbSave.Step = 1;
+            this.pbSave.TabIndex = 14;
+            // 
+            // lCurrent
+            // 
+            this.lCurrent.AutoSize = true;
+            this.lCurrent.BackColor = System.Drawing.Color.Transparent;
+            this.lCurrent.Location = new System.Drawing.Point(478, 600);
+            this.lCurrent.Name = "lCurrent";
+            this.lCurrent.Size = new System.Drawing.Size(0, 13);
+            this.lCurrent.TabIndex = 15;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1067, 618);
+            this.Controls.Add(this.lCurrent);
+            this.Controls.Add(this.pbSave);
             this.Controls.Add(this.chkErase);
             this.Controls.Add(this.chkCopy);
             this.Controls.Add(this.txFlNameDest);
@@ -349,6 +372,8 @@
         private System.Windows.Forms.TextBox txFlNameDest;
         private System.Windows.Forms.CheckBox chkCopy;
         private System.Windows.Forms.CheckBox chkErase;
+        private System.Windows.Forms.ProgressBar pbSave;
+        private System.Windows.Forms.Label lCurrent;
     }
 }
 
