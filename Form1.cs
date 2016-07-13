@@ -52,11 +52,13 @@ namespace WindowsFormsApplication4
                 Doc = comObject.OpenDoc(sFileName); 
                 V = Doc.GetVariableDescriptions();
             }
+
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //txVarNames.Text = "";
+            txValCorrect.Text = "";
+            txCommCorrect.Text = "";
             dgVars.Rows.Clear();
 
 
@@ -121,21 +123,105 @@ namespace WindowsFormsApplication4
 
         private void bSaveChg_Click(object sender, EventArgs e)
         {
+            int i;
+            if (!chkCopy.Checked)
+            {
+                try
+                {
+                    bSaveChg.Text = "Save changes";
+                    bSaveChg.Enabled = false;
+                    for (i = 0; i < dgVars.Rows.Count - 1; i++)
+                    {
+                        setVariable(QV, (string)dgVars[0, i].Value, (string)dgVars[2, i].Value, (string)dgVars[1, i].Value);
+                        /*
+                        try
+                        {
+                            QV.doc.Variables(dgVars[0, i].Value).SetComment(dgVars[2, i].Value);
+                            QV.doc.Variables(dgVars[0, i].Value).SetContent(dgVars[1, i].Value, true);
+                        }
+                        catch
+                        {
+                            System.Threading.Thread.Sleep(400);
+                            QV.doc.Variables(dgVars[0, i].Value).SetComment(dgVars[2, i].Value);
+                            QV.doc.Variables(dgVars[0, i].Value).SetContent(dgVars[1, i].Value, true);
+                        }
+                         */
+                    }
+                    QV.doc.Save();
+                }
+                catch
+                {
+                    bSaveChg.Enabled = true;
+                    //bSaveChg.Text = "Saving error";
+                    MessageBox.Show("Fail!", "Saving process",
+                                     MessageBoxButtons.YesNo,
+                                     MessageBoxIcon.Error);
+                }
+                MessageBox.Show("Complete!", "Saving process",
+                                     MessageBoxButtons.YesNo,
+                                     MessageBoxIcon.Exclamation);
+            }
+            else
+            {
+                try
+                {
+                    bSaveChg.Enabled = false;
+                    try
+                    { QV.doc.CloseDoc(); }
+                    catch { }
+
+                    QV = new QlikInstance(txFlName.Text);
+                    QlikInstance QVdest = new QlikInstance(txFlNameDest.Text);
+
+                    if (chkErase.Checked)
+                    {
+                        for (int ii = 0; ii < QVdest.v.count; ii++)
+                        {
+                            QVdest.doc.RemoveVariable(QVdest.v.Item(ii).Name);
+                        }
+                    }
+
+                    string varname;
+                    for (int ii = 0; ii < QV.v.count; ii++)
+                    {
+                        varname = QV.v.Item(ii).Name;
+                        QVdest.doc.RemoveVariable(varname);
+                        QVdest.doc.CreateVariable(varname);
+
+                        setVariable(QVdest, varname, QV.doc.Variables(varname).GetComment(), QV.doc.Variables(varname).GetRawContent());
+
+                    }
+                    QVdest.doc.Save();
+                    QV.doc.CloseDoc();
+                    QVdest.doc.CloseDoc();
+                    bSaveChg.Enabled = true;
+                }
+                catch
+                {
+                    bSaveChg.Enabled = true;
+                    MessageBox.Show("Fail!", "Transfering process",
+                                     MessageBoxButtons.YesNo,
+                                     MessageBoxIcon.Error);
+                }
+                MessageBox.Show("Complete!", "Transfering process",
+                                     MessageBoxButtons.YesNo,
+                                     MessageBoxIcon.Exclamation);
+
+            }
+        }
+
+        private void setVariable(QlikInstance Q, string Name, string Comment, string Content)
+        {
             try
             {
-                bSaveChg.Text = "Save changes";
-                bSaveChg.Enabled = false;
-                for (int i = 0; i < dgVars.Rows.Count-1; i++)
-                {
-                    QV.doc.Variables(dgVars[0, i].Value).SetComment(dgVars[2, i].Value);
-                    QV.doc.Variables(dgVars[0, i].Value).SetContent(dgVars[1, i].Value, true);
-                }
-                QV.doc.Save();
+                Q.doc.Variables(Name).SetComment(Comment);
+                Q.doc.Variables(Name).SetContent(Content, true);
             }
             catch
             {
-                bSaveChg.Enabled = true;
-                bSaveChg.Text = "Saving error";
+                System.Threading.Thread.Sleep(400);
+                Q.doc.Variables(Name).SetComment(Comment);
+                Q.doc.Variables(Name).SetContent(Content, true);
             }
         }
 
@@ -254,10 +340,13 @@ namespace WindowsFormsApplication4
                         {
                             dgVars[2, j].Value = ss;
                         }
-                        ss = (string)(range.Cells[i, 2] as Excel.Range).Value;
-                        if (dgVars[1, j].Value != null && !dgVars[1, j].Value.Equals(ss))
+                        if (!chkOnlyComm.Checked)
                         {
-                            dgVars[1, j].Value = ss;
+                            ss = (string)(range.Cells[i, 2] as Excel.Range).Value;
+                            if (dgVars[1, j].Value != null && !dgVars[1, j].Value.Equals(ss))
+                            {
+                                dgVars[1, j].Value = ss;
+                            }
                         }
                         break;
                     }
@@ -305,6 +394,18 @@ namespace WindowsFormsApplication4
         private void Form1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void chkCopy_CheckedChanged(object sender, EventArgs e)
+        {
+            chkErase.Enabled = chkCopy.Checked;
+            txFlNameDest.Enabled = chkCopy.Checked;
+            
+            chkNewImport.Enabled = !chkCopy.Checked;
+            txFlNameComm.Enabled = !chkCopy.Checked;
+            bExport.Enabled = !chkCopy.Checked;
+            bLoad.Enabled = !chkCopy.Checked;
+            chkOnlyComm.Enabled = !chkCopy.Checked;
         }
     }
 }
